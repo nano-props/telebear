@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Telebear</title>
-    <meta name="description" content="Temporary SSH server tunneled through FRP, managed from a terminal UI." />
+    <title>Telebear 开门熊</title>
+    <meta name="description" content="Instant SSH tunnel. Temporary SSH server tunneled through FRP, managed from a terminal UI." />
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐻</text></svg>" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -609,8 +609,8 @@
       const M = {
         en: {
           navFeat:"Features",navHow:"How it works",navKeys:"Keybindings",navGH:"GitHub",
-          h1:'Temporary SSH,<br>tunneled through <em>FRP</em>',
-          hsub:"Spin up an SSH server and publish it through FRP. All from a terminal UI.",
+          h1:'Telebear: Instant <em>SSH Tunnel</em>',
+          hsub:"Spin up a temporary SSH server and expose it through FRP. All from a terminal UI.",
           hcta:"Install",hcta2:"How it works",
           t1:"Config loaded",t2:"Starting SSH on :20222",t3:"SSH server ready",
           t4:"Connecting frpc to frps.example.com:7000",t5:"Tunnel established → :6000",
@@ -645,28 +645,28 @@
         },
         zh: {
           navFeat:"\u529f\u80fd",navHow:"\u539f\u7406",navKeys:"\u5feb\u6377\u952e",navGH:"GitHub",
-          h1:'\u4e34\u65f6 SSH\uff0c<br>\u901a\u8fc7 <em>FRP</em> \u96a7\u9053\u53d1\u5e03',
-          hsub:"\u5728\u7ec8\u7aef UI \u4e2d\u542f\u52a8 SSH \u670d\u52a1\u5e76\u901a\u8fc7 FRP \u53d1\u5e03\u3002",
+          h1:'\u5f00\u95e8\u718a<br><em>\u4e34\u65f6 SSH \u96a7\u9053</em>',
+          hsub:"\u901a\u8fc7 FRP \u96a7\u9053\u53d1\u5e03\u4e34\u65f6 SSH \u3002\u7ec8\u7aef UI \u4e00\u952e\u542f\u52a8\uff0c\u7528\u5b8c\u5373\u8d70\u3002",
           hcta:"\u5b89\u88c5",hcta2:"\u5de5\u4f5c\u539f\u7406",
           t1:"\u914d\u7f6e\u5df2\u52a0\u8f7d",t2:"\u6b63\u5728\u542f\u52a8 SSH :20222",t3:"SSH \u5df2\u5c31\u7eea",
           t4:"\u8fde\u63a5 frpc \u5230 frps.example.com:7000",t5:"\u96a7\u9053\u5df2\u5efa\u7acb → :6000",
           t6:"ssh -p 6000 user@frps.example.com",
           ts1:"\u8fd0\u884c\u4e2d :20222",ts2:"\u96a7\u9053\u5df2\u6fc0\u6d3b",
-          flab:"\u529f\u80fd",ftitle:"\u4e00\u4e2a\u7ec8\u7aef\u4f1a\u8bdd\uff0c<br>\u5168\u90e8\u641e\u5b9a",
+          flab:"\u529f\u80fd",ftitle:"\u4e34\u65f6\u96a7\u9053\uff0c<br>\u5feb\u901f\u5f00\u95e8",
           f1t:"SSH \u670d\u52a1",f1d:"\u5185\u7f6e SSH2\uff0c\u516c\u94a5\u8ba4\u8bc1\u3001PTY\u3001shell\u3001exec\u3002",
           f2t:"FRP \u96a7\u9053",f2d:"\u81ea\u52a8\u751f\u6210 frpc \u914d\u7f6e\uff0c\u8fde\u63a5\u670d\u52a1\u5668\uff0c\u7ed1\u5b9a\u8fdc\u7a0b\u7aef\u53e3\u3002",
           f3t:"\u7ec8\u7aef UI",f3d:"\u72b6\u6001\u3001\u914d\u7f6e\u3001\u65e5\u5fd7\u3002\u5355\u952e\u5207\u6362\u89c6\u56fe\u5e76\u63a7\u5236\u670d\u52a1\u3002",
           f4t:"\u81ea\u52a8\u56de\u6eda",f4d:"\u96a7\u9053\u5931\u8d25\u65f6 SSH \u81ea\u52a8\u505c\u6b62\u3002\u4e0d\u7559\u5b64\u7acb\u8fdb\u7a0b\u3002",
           f5t:"TOML \u914d\u7f6e",f5d:"\u516d\u4e2a\u5b57\u6bb5\u3002TUI \u6216\u4efb\u4f55\u7f16\u8f91\u5668\u4fee\u6539\u3002",
           f6t:"\u5355\u4e8c\u8fdb\u5236",f6d:"\u7f16\u8bd1\u4e3a\u72ec\u7acb\u53ef\u6267\u884c\u6587\u4ef6\u3002\u90e8\u7f72 telebear + frpc\u3002",
-          hlab:"\u539f\u7406",htitle:"\u4e09\u6b65\u5f97\u5230\u516c\u7f51<br>SSH \u5165\u53e3",
+          hlab:"\u539f\u7406",htitle:"\u4e09\u6b65\u642d\u5efa<br>\u4e34\u65f6 SSH \u96a7\u9053",
           s1t:"\u51c6\u5907 SSH",s1d:"\u6821\u9a8c\u914d\u7f6e\uff0c\u751f\u6210 host key\uff0c\u5199\u5165 authorized_keys\uff0c\u542f\u52a8 SSH2\u3002",
           s2t:"\u5efa\u7acb\u96a7\u9053",s2d:"\u751f\u6210\u4e34\u65f6 frpc.toml\uff0c\u542f\u52a8 frpc\uff0c\u7b49\u5f85 proxy success\u3002",
-          s3t:"\u64cd\u4f5c",s3d:"\u72b6\u6001\u3001\u65e5\u5fd7\u3001\u914d\u7f6e\u3001\u505c\u6b62/\u91cd\u542f\u3002\u5168\u5728 TUI \u4e2d\u3002",
+          s3t:"\u5f00\u95e8\u5927\u5409",s3d:"\u5ba2\u6237\u7aef SSH \u8fde\u63a5\u5df2\u5c31\u7eea\u3002\u7528\u5b8c\u4e00\u952e\u505c\u6b62\uff0c\u4e0d\u7559\u75d5\u8ff9\u3002",
           qk:"\u5feb\u901f\u5f00\u59cb",
-          ulab:"\u573a\u666f",utitle:"\u9700\u8981\u65f6\uff0c<br>\u4e34\u65f6\u8bbf\u95ee",
-          u1t:"\u8fdc\u7a0b\u8c03\u8bd5",u1d:"SSH \u5230 NAT \u540e\u7684\u673a\u5668\uff0c\u7528\u5b8c\u62c6\u9664\u3002",
-          u2t:"\u670d\u52a1\u5668\u8bbf\u95ee",u2d:"\u76f4\u8fde\u4e0d\u4fbf\u65f6\uff0c\u901a\u8fc7 FRP \u66b4\u9732 SSH\u3002",
+          ulab:"\u573a\u666f",utitle:"\u4e34\u65f6\u9700\u8981\uff0c<br>\u4e34\u65f6\u5f00\u95e8",
+          u1t:"\u8fdc\u7a0b\u8c03\u8bd5",u1d:"\u7a81\u7834 NAT\uff0c\u4e34\u65f6\u8fdb\u5165\u5185\u7f51\u673a\u5668\u8c03\u8bd5\uff0c\u5b8c\u4e8b\u4e00\u952e\u6e05\u573a\u3002",
+          u2t:"\u670d\u52a1\u5668\u8bbf\u95ee",u2d:"\u6ca1\u6709\u516c\u7f51 IP\uff1f\u901a\u8fc7 FRP \u96a7\u9053\u8ba9 SSH \u8d70\u51fa\u6765\u3002",
           u3t:"\u7ed3\u5bf9\u7f16\u7a0b",u3d:"\u8ba9\u540c\u4e8b\u4e34\u65f6 SSH \u5230\u4f60\u7684\u673a\u5668\u3002",
           u4t:"\u8fd0\u7ef4",u4d:"\u7ef4\u62a4\u7a97\u53e3\u62c9\u8d77 SSH\uff0c\u5e26\u81ea\u52a8\u6e05\u7406\u3002",
           klab:"\u5feb\u6377\u952e",ktitle:"\u952e\u76d8\u9a71\u52a8",
@@ -676,7 +676,7 @@
           k13:"\u5bfc\u822a",k14:"\u7f16\u8f91",
           ilab:"\u5b89\u88c5",ititle:"\u4e00\u6761\u547d\u4ee4",copy:"\u590d\u5236",
           dep1:"frpc",dep2:"\u4f5c\u4e3a\u5916\u90e8\u4f9d\u8d56\u5fc5\u9700",
-          ft:"Telebear \u2014 \u4e34\u65f6 SSH + FRP \u96a7\u9053",ff:"\u529f\u80fd",fh:"\u539f\u7406",
+          ft:"\u5f00\u95e8\u718a \u2014 \u4e34\u65f6 SSH \u96a7\u9053 | Telebear",ff:"\u529f\u80fd",fh:"\u539f\u7406",
           langLabel:"English",themeLight:"\u6d45\u8272",themeDark:"\u6df1\u8272"
         }
       };
