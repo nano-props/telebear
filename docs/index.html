@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Telebear 开门熊</title>
-    <meta name="description" content="Instant SSH tunnel. Temporary SSH server tunneled through FRP, managed from a terminal UI." />
+    <title>Telebear — Instant SSH + FRP Tunnel</title>
+    <meta name="description" content="Instant SSH server tunneled through FRP, managed from a terminal UI." />
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐻</text></svg>" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -23,8 +23,6 @@
         --accent: #0d9488;
         --accent-bg: #f0fdfa;
         --accent2: #115e59;
-        --green: #16a34a;
-        --amber: #ca8a04;
         --nav-bg: rgba(250, 250, 249, 0.85);
         --card-shadow: 0 1px 2px rgba(0,0,0,0.04);
         --hero-shadow: 0 24px 80px rgba(0,0,0,0.06);
@@ -45,8 +43,6 @@
         --accent: #2dd4bf;
         --accent-bg: rgba(45, 212, 191, 0.06);
         --accent2: #5eead4;
-        --green: #4ade80;
-        --amber: #fbbf24;
         --nav-bg: rgba(12, 10, 9, 0.85);
         --card-shadow: none;
         --hero-shadow: 0 24px 80px rgba(0,0,0,0.3);
@@ -68,7 +64,7 @@
       a { color: inherit; text-decoration: none; }
       ::selection { background: var(--accent); color: white; }
 
-      .wrap { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+      .wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
 
       /* ── Nav ────────────────────────────────────────────────────── */
       nav {
@@ -79,22 +75,22 @@
       }
       .nav-inner {
         display: flex; align-items: center; justify-content: space-between;
-        max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 64px;
+        max-width: 1080px; margin: 0 auto; padding: 0 24px; height: 56px;
       }
       .nav-brand {
-        font-family: var(--sans); font-size: 1.5rem; font-weight: 400;
-        color: var(--text); letter-spacing: -0.02em;
+        font-family: var(--mono); font-size: 0.95rem; font-weight: 600;
+        color: var(--text); letter-spacing: -0.01em;
       }
-      .nav-center { display: flex; gap: 8px; }
+      .nav-center { display: flex; gap: 4px; }
       .nav-center a {
-        font-size: 0.9rem; color: var(--text2); padding: 6px 14px;
-        border-radius: 8px; transition: all 0.15s;
+        font-size: 0.85rem; color: var(--text2); padding: 5px 12px;
+        border-radius: 6px; transition: all 0.15s;
       }
       .nav-center a:hover { color: var(--text); background: var(--bg2); }
-      .nav-right { display: flex; gap: 8px; align-items: center; }
+      .nav-right { display: flex; gap: 6px; align-items: center; }
       .nav-btn {
-        font-family: var(--sans); font-size: 0.85rem; font-weight: 500;
-        padding: 7px 16px; border-radius: 8px; cursor: pointer;
+        font-family: var(--sans); font-size: 0.8rem; font-weight: 500;
+        padding: 5px 12px; border-radius: 6px; cursor: pointer;
         border: 1px solid var(--border); background: transparent;
         color: var(--text2); transition: all 0.15s;
       }
@@ -105,29 +101,29 @@
       .nav-btn-fill:hover { opacity: 0.85; background: var(--text); color: var(--bg); }
 
       /* ── Hero ───────────────────────────────────────────────────── */
-      .hero { padding: 100px 0 80px; text-align: center; }
+      .hero { padding: 80px 0 64px; text-align: center; }
       .hero h1 {
-        font-family: var(--sans); font-weight: 400;
-        font-size: clamp(3.2rem, 8vw, 6rem);
-        line-height: 1.05; letter-spacing: -0.03em;
-        color: var(--text); margin-bottom: 28px;
+        font-family: var(--sans); font-weight: 700;
+        font-size: clamp(2.4rem, 6vw, 4rem);
+        line-height: 1.1; letter-spacing: -0.03em;
+        color: var(--text); margin-bottom: 20px;
       }
       .hero h1 em {
         font-style: normal; color: var(--accent);
       }
       .hero-sub {
-        font-size: clamp(1.1rem, 2vw, 1.3rem);
-        color: var(--text2); max-width: 540px;
-        margin: 0 auto 40px; line-height: 1.6;
+        font-size: clamp(1rem, 1.8vw, 1.15rem);
+        color: var(--text2); max-width: 480px;
+        margin: 0 auto 32px; line-height: 1.6;
       }
       .hero-actions {
-        display: flex; gap: 12px; justify-content: center;
-        flex-wrap: wrap; margin-bottom: 48px;
+        display: flex; gap: 10px; justify-content: center;
+        flex-wrap: wrap; margin-bottom: 40px;
       }
       .btn {
         display: inline-flex; align-items: center; gap: 8px;
-        font-family: var(--sans); font-size: 1rem; font-weight: 500;
-        padding: 14px 28px; border-radius: 12px; cursor: pointer;
+        font-family: var(--sans); font-size: 0.9rem; font-weight: 500;
+        padding: 10px 22px; border-radius: 10px; cursor: pointer;
         border: 1px solid var(--border); background: var(--card);
         color: var(--text); transition: all 0.2s; white-space: nowrap;
       }
@@ -139,36 +135,36 @@
 
       /* ── Terminal ───────────────────────────────────────────────── */
       .hero-terminal {
-        max-width: 680px; margin: 0 auto;
-        border-radius: 16px; overflow: hidden;
+        max-width: 600px; margin: 0 auto;
+        border-radius: 14px; overflow: hidden;
         background: #0f172a;
         box-shadow: var(--hero-shadow);
         border: 1px solid rgba(255,255,255,0.06);
       }
       .term-bar {
         display: flex; align-items: center; justify-content: space-between;
-        padding: 14px 18px;
+        padding: 12px 16px;
         border-bottom: 1px solid rgba(255,255,255,0.06);
       }
-      .term-dots { display: flex; gap: 8px; }
-      .term-dot { width: 10px; height: 10px; border-radius: 50%; }
+      .term-dots { display: flex; gap: 7px; }
+      .term-dot { width: 9px; height: 9px; border-radius: 50%; }
       .term-dot:nth-child(1) { background: #f87171; }
       .term-dot:nth-child(2) { background: #fbbf24; }
       .term-dot:nth-child(3) { background: #34d399; }
       .term-bar > span {
-        font-family: var(--mono); font-size: 0.8rem; color: #475569;
+        font-family: var(--mono); font-size: 0.75rem; color: #475569;
       }
       .term-body {
-        padding: 20px 22px; font-family: var(--mono);
-        font-size: 0.9rem; line-height: 2; text-align: left;
+        padding: 16px 18px; font-family: var(--mono);
+        font-size: 0.82rem; line-height: 1.9; text-align: left;
       }
       .term-body .p { color: #34d399; }
       .term-body .c { color: #e2e8f0; }
-      .term-body .o { color: #64748b; padding-left: 20px; display: block; }
+      .term-body .o { color: #64748b; padding-left: 18px; display: block; }
       .term-body .ok { color: #34d399; }
       .term-body .hi { color: #38bdf8; }
       .term-body .blink {
-        display: inline-block; width: 8px; height: 16px;
+        display: inline-block; width: 7px; height: 14px;
         background: #38bdf8; vertical-align: text-bottom;
         animation: blink 1s step-end infinite;
       }
@@ -179,88 +175,88 @@
         border-top: 1px dashed rgba(255,255,255,0.06);
       }
       .term-footer div {
-        padding: 14px 22px;
+        padding: 12px 18px;
       }
       .term-footer div + div { border-left: 1px dashed rgba(255,255,255,0.06); }
-      .term-footer small { font-family: var(--mono); font-size: 0.7rem; color: #475569; text-transform: uppercase; letter-spacing: 0.06em; display: block; margin-bottom: 4px; }
-      .term-footer strong { font-family: var(--mono); font-size: 0.85rem; color: #34d399; font-weight: 500; }
+      .term-footer small { font-family: var(--mono); font-size: 0.65rem; color: #475569; text-transform: uppercase; letter-spacing: 0.06em; display: block; margin-bottom: 2px; }
+      .term-footer strong { font-family: var(--mono); font-size: 0.8rem; color: #34d399; font-weight: 500; }
 
       /* ── Sections ───────────────────────────────────────────────── */
-      .section { padding: 80px 0; }
+      .section { padding: 64px 0; }
       .section + .section { border-top: 1px solid var(--border); }
-      .section-head { margin-bottom: 48px; max-width: 560px; }
-      .section-head.center { text-align: center; max-width: 600px; margin-left: auto; margin-right: auto; }
+      .section-head { margin-bottom: 40px; max-width: 520px; }
+      .section-head.center { text-align: center; max-width: 560px; margin-left: auto; margin-right: auto; }
       .section-label {
-        font-family: var(--mono); font-size: 0.8rem; font-weight: 500;
+        font-family: var(--mono); font-size: 0.75rem; font-weight: 500;
         color: var(--accent); text-transform: uppercase;
-        letter-spacing: 0.08em; margin-bottom: 16px;
+        letter-spacing: 0.08em; margin-bottom: 12px;
       }
       .section-title {
-        font-family: var(--sans); font-weight: 700;
-        font-size: clamp(1.8rem, 4vw, 2.8rem);
-        line-height: 1.15; letter-spacing: -0.02em;
+        font-family: var(--sans); font-weight: 600;
+        font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+        line-height: 1.2; letter-spacing: -0.02em;
         color: var(--text);
       }
 
       /* ── Features ───────────────────────────────────────────────── */
       .feat-grid {
         display: grid; grid-template-columns: repeat(3, 1fr);
-        gap: 1px; border-radius: 16px; overflow: hidden;
+        gap: 1px; border-radius: 14px; overflow: hidden;
         border: 1px solid var(--border); background: var(--border);
       }
       .feat {
-        padding: 36px 32px; background: var(--card);
+        padding: 28px 24px; background: var(--card);
         transition: background 0.2s;
       }
       .feat:hover { background: var(--card-hover); }
       .feat-icon {
-        width: 44px; height: 44px; border-radius: 12px;
+        width: 38px; height: 38px; border-radius: 10px;
         display: flex; align-items: center; justify-content: center;
-        font-family: var(--mono); font-size: 1.1rem; font-weight: 600;
-        margin-bottom: 20px; border: 1px solid var(--border);
+        font-family: var(--mono); font-size: 1rem; font-weight: 600;
+        margin-bottom: 16px; border: 1px solid var(--border);
         color: var(--accent); background: var(--accent-bg);
       }
       .feat h3 {
-        font-family: var(--sans); font-size: 1.05rem; font-weight: 600;
-        color: var(--text); margin-bottom: 8px;
+        font-family: var(--sans); font-size: 0.95rem; font-weight: 600;
+        color: var(--text); margin-bottom: 6px;
       }
-      .feat p { font-size: 0.95rem; color: var(--text2); line-height: 1.55; }
+      .feat p { font-size: 0.88rem; color: var(--text2); line-height: 1.5; }
 
       /* ── How it works ───────────────────────────────────────────── */
       .how-grid {
         display: grid; grid-template-columns: 1fr 1.1fr;
-        gap: 56px; align-items: start;
+        gap: 48px; align-items: start;
       }
-      .steps { display: flex; flex-direction: column; gap: 8px; }
+      .steps { display: flex; flex-direction: column; gap: 4px; }
       .step {
-        display: flex; gap: 20px; padding: 24px 20px;
-        border-radius: 14px; transition: background 0.15s;
+        display: flex; gap: 16px; padding: 20px 16px;
+        border-radius: 12px; transition: background 0.15s;
       }
       .step:hover { background: var(--bg2); }
       .step-n {
-        flex-shrink: 0; width: 40px; height: 40px;
-        border-radius: 12px; display: flex; align-items: center; justify-content: center;
-        font-family: var(--sans); font-size: 1.2rem; font-weight: 700;
+        flex-shrink: 0; width: 36px; height: 36px;
+        border-radius: 10px; display: flex; align-items: center; justify-content: center;
+        font-family: var(--sans); font-size: 1.05rem; font-weight: 700;
         color: var(--accent); background: var(--accent-bg);
         border: 1px solid var(--border);
       }
       .step h4 {
-        font-family: var(--sans); font-size: 1.05rem; font-weight: 600;
+        font-family: var(--sans); font-size: 0.95rem; font-weight: 600;
         color: var(--text); margin-bottom: 4px;
       }
-      .step p { font-size: 0.95rem; color: var(--text2); line-height: 1.5; }
+      .step p { font-size: 0.88rem; color: var(--text2); line-height: 1.5; }
 
       .code-card {
-        border-radius: 16px; overflow: hidden; background: #0f172a;
+        border-radius: 14px; overflow: hidden; background: #0f172a;
         border: 1px solid rgba(255,255,255,0.06);
       }
       .code-card-head {
-        padding: 12px 20px; font-family: var(--mono); font-size: 0.78rem;
+        padding: 10px 18px; font-family: var(--mono); font-size: 0.72rem;
         color: #475569; border-bottom: 1px solid rgba(255,255,255,0.06);
         display: flex; justify-content: space-between;
       }
       .code-card pre {
-        padding: 24px; font-family: var(--mono); font-size: 0.95rem;
+        padding: 20px; font-family: var(--mono); font-size: 0.85rem;
         line-height: 2; color: #cbd5e1; overflow-x: auto;
       }
       .code-card .cm { color: #475569; }
@@ -270,89 +266,90 @@
 
       /* ── Use cases ──────────────────────────────────────────────── */
       .use-grid {
-        display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;
+        display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;
       }
       .use-card {
-        padding: 28px 24px; border-radius: 14px;
+        padding: 24px 20px; border-radius: 12px;
         border: 1px solid var(--border); background: var(--card);
         box-shadow: var(--card-shadow); transition: all 0.2s;
       }
       .use-card:hover { border-color: var(--border2); background: var(--card-hover); }
       .use-card h4 {
-        font-family: var(--sans); font-size: 1.05rem; font-weight: 600;
-        color: var(--text); margin-bottom: 6px;
+        font-family: var(--sans); font-size: 0.95rem; font-weight: 600;
+        color: var(--text); margin-bottom: 4px;
       }
-      .use-card p { font-size: 0.95rem; color: var(--text2); line-height: 1.5; }
+      .use-card p { font-size: 0.88rem; color: var(--text2); line-height: 1.5; }
 
       /* ── Keybindings ────────────────────────────────────────────── */
       .keys-card {
-        border: 1px solid var(--border); border-radius: 16px;
-        overflow: hidden; background: var(--card); max-width: 600px;
+        border: 1px solid var(--border); border-radius: 14px;
+        overflow: hidden; background: var(--card); max-width: 540px;
+        margin: 0 auto;
       }
       .keys-group {
-        font-family: var(--mono); font-size: 0.78rem; font-weight: 600;
+        font-family: var(--mono); font-size: 0.72rem; font-weight: 600;
         text-transform: uppercase; letter-spacing: 0.06em; color: var(--text3);
-        padding: 12px 24px; background: var(--bg2);
+        padding: 10px 20px; background: var(--bg2);
         border-bottom: 1px solid var(--border);
       }
       .keys-row {
-        display: flex; align-items: center; padding: 10px 24px;
-        border-bottom: 1px solid var(--border); font-size: 0.95rem;
+        display: flex; align-items: center; padding: 8px 20px;
+        border-bottom: 1px solid var(--border); font-size: 0.88rem;
         transition: background 0.1s;
       }
       .keys-row:last-child { border-bottom: none; }
       .keys-row:hover { background: var(--bg2); }
       .kbd {
         display: inline-flex; align-items: center; justify-content: center;
-        min-width: 32px; height: 28px; padding: 0 8px; margin-right: 16px;
-        font-family: var(--mono); font-size: 0.82rem; font-weight: 600;
+        min-width: 30px; height: 26px; padding: 0 7px; margin-right: 14px;
+        font-family: var(--mono); font-size: 0.78rem; font-weight: 600;
         background: var(--bg2); border: 1px solid var(--border);
-        border-radius: 6px; color: var(--text);
+        border-radius: 5px; color: var(--text);
       }
       [data-theme="dark"] .kbd { background: var(--card-hover); }
       .keys-row span:last-child { color: var(--text2); }
 
       /* ── Install CTA ────────────────────────────────────────────── */
-      .cta { padding: 100px 0; text-align: center; }
-      .cta .section-title { margin-bottom: 32px; }
+      .cta { padding: 80px 0; text-align: center; }
+      .cta .section-title { margin-bottom: 24px; }
       .install-bar {
-        display: inline-flex; align-items: center; gap: 16px;
-        padding: 16px 24px; border-radius: 14px;
-        background: #0f172a; font-family: var(--mono); font-size: 1.05rem;
+        display: inline-flex; align-items: center; gap: 14px;
+        padding: 14px 20px; border-radius: 12px;
+        background: #0f172a; font-family: var(--mono); font-size: 0.92rem;
         border: 1px solid rgba(255,255,255,0.06);
         box-shadow: var(--hero-shadow);
       }
       .install-bar .pr { color: #34d399; user-select: none; }
       .install-bar .cm { color: #e2e8f0; }
       .install-bar button {
-        font-family: var(--mono); font-size: 0.75rem; color: #64748b;
+        font-family: var(--mono); font-size: 0.7rem; color: #64748b;
         background: transparent; border: 1px solid rgba(255,255,255,0.08);
-        border-radius: 6px; padding: 4px 10px; cursor: pointer;
+        border-radius: 5px; padding: 3px 8px; cursor: pointer;
         transition: all 0.15s;
       }
       .install-bar button:hover { color: #e2e8f0; border-color: rgba(255,255,255,0.2); }
 
       .cta-note {
-        margin-top: 20px; font-size: 0.9rem; color: var(--text3);
+        margin-top: 16px; font-size: 0.85rem; color: var(--text3);
       }
       .cta-note strong { color: var(--text2); font-weight: 500; }
 
       /* ── Footer ─────────────────────────────────────────────────── */
       footer {
-        border-top: 1px solid var(--border); padding: 24px 0;
+        border-top: 1px solid var(--border); padding: 20px 0;
       }
       .footer-inner {
         display: flex; align-items: center; justify-content: space-between;
-        font-size: 0.88rem; color: var(--text3);
+        font-size: 0.82rem; color: var(--text3);
       }
-      .footer-links { display: flex; gap: 20px; }
+      .footer-links { display: flex; gap: 16px; }
       .footer-links a { color: var(--text3); transition: color 0.15s; }
       .footer-links a:hover { color: var(--text); }
 
       /* ── Animations ─────────────────────────────────────────────── */
       [data-r] {
-        opacity: 0; transform: translateY(20px);
-        animation: rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        opacity: 0; transform: translateY(16px);
+        animation: rise 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
       }
       [data-r="1"] { animation-delay: 0.05s; }
       [data-r="2"] { animation-delay: 0.12s; }
@@ -360,7 +357,7 @@
       @keyframes rise { to { opacity: 1; transform: none; } }
 
       .term-body > div {
-        opacity: 0; animation: rise 0.35s ease forwards;
+        opacity: 0; animation: rise 0.3s ease forwards;
       }
       .term-body > div:nth-child(1) { animation-delay: 0.2s; }
       .term-body > div:nth-child(2) { animation-delay: 0.4s; }
@@ -374,19 +371,19 @@
       /* ── Responsive ─────────────────────────────────────────────── */
       @media (max-width: 900px) {
         .feat-grid, .use-grid { grid-template-columns: 1fr; }
-        .how-grid { grid-template-columns: 1fr; gap: 32px; }
+        .how-grid { grid-template-columns: 1fr; gap: 28px; }
         .nav-center { display: none; }
         .term-footer { grid-template-columns: 1fr; }
         .term-footer div + div { border-left: none; border-top: 1px dashed rgba(255,255,255,0.06); }
       }
       @media (max-width: 600px) {
-        .hero { padding: 64px 0 48px; }
-        .section { padding: 56px 0; }
-        .cta { padding: 64px 0; }
+        .hero { padding: 56px 0 40px; }
+        .section { padding: 48px 0; }
+        .cta { padding: 56px 0; }
         .hero-actions { flex-direction: column; }
         .btn { width: 100%; justify-content: center; }
-        .install-bar { flex-wrap: wrap; justify-content: center; font-size: 0.92rem; }
-        .footer-inner { flex-direction: column; gap: 12px; text-align: center; }
+        .install-bar { flex-wrap: wrap; justify-content: center; font-size: 0.85rem; }
+        .footer-inner { flex-direction: column; gap: 10px; text-align: center; }
       }
     </style>
   </head>
@@ -412,8 +409,8 @@
 
       <!-- Hero -->
       <section class="hero" data-r="1">
-        <h1 data-i18n="h1">Temporary SSH,<br>tunneled through <em>FRP</em></h1>
-        <p class="hero-sub" data-i18n="hsub">Spin up an SSH server and publish it through FRP. All from a terminal UI.</p>
+        <h1 data-i18n="h1">Instant SSH<br>tunneled through <em>FRP</em></h1>
+        <p class="hero-sub" data-i18n="hsub">Spin up an SSH server and expose it through FRP. Terminal UI, single binary, zero config drift.</p>
         <div class="hero-actions">
           <a class="btn btn-primary" href="#install" data-i18n="hcta">Install</a>
           <a class="btn" href="#how" data-i18n="hcta2">How it works</a>
@@ -428,7 +425,7 @@
             <div><span class="p">$</span> <span class="c">telebear</span></div>
             <div><span class="o hi" data-i18n="t1">Config loaded</span></div>
             <div><span class="o" data-i18n="t2">Starting SSH on :20222</span></div>
-            <div><span class="o ok" data-i18n="t3">SSH server ready</span></div>
+            <div><span class="o ok" data-i18n="t3">SSH ready</span></div>
             <div><span class="o" data-i18n="t4">Connecting frpc to frps.example.com:7000</span></div>
             <div><span class="o ok" data-i18n="t5">Tunnel established → :6000</span></div>
             <div>&nbsp;</div>
@@ -443,7 +440,7 @@
 
       <!-- Features -->
       <section id="features" class="section" data-r="3">
-        <div class="section-head">
+        <div class="section-head center">
           <div class="section-label" data-i18n="flab">Features</div>
           <div class="section-title" data-i18n="ftitle">One terminal session,<br>everything you need</div>
         </div>
@@ -454,7 +451,7 @@
             <p data-i18n="f1d">Built-in SSH2 with public-key auth, PTY, shell and exec.</p>
           </div>
           <div class="feat">
-            <div class="feat-icon">⇋</div>
+            <div class="feat-icon">&#x21cb;</div>
             <h3 data-i18n="f2t">FRP Tunnel</h3>
             <p data-i18n="f2d">Auto-generates frpc config, connects to your server, binds a remote port.</p>
           </div>
@@ -466,7 +463,7 @@
           <div class="feat">
             <div class="feat-icon">!</div>
             <h3 data-i18n="f4t">Auto Rollback</h3>
-            <p data-i18n="f4d">Tunnel fails? SSH stops automatically. No dangling processes.</p>
+            <p data-i18n="f4d">Tunnel fails? SSH stops automatically. No orphan processes left behind.</p>
           </div>
           <div class="feat">
             <div class="feat-icon">%</div>
@@ -493,43 +490,46 @@
               <div class="step-n">1</div>
               <div>
                 <h4 data-i18n="s1t">Prepare SSH</h4>
-                <p data-i18n="s1d">Validate config, generate host key, write authorized_keys, start SSH2 on localhost.</p>
+                <p data-i18n="s1d">Validate config, generate host key, write authorized_keys, start SSH2.</p>
               </div>
             </div>
             <div class="step">
               <div class="step-n">2</div>
               <div>
                 <h4 data-i18n="s2t">Establish Tunnel</h4>
-                <p data-i18n="s2d">Write temp frpc.toml, spawn frpc, wait for proxy success.</p>
+                <p data-i18n="s2d">Generate temp frpc.toml, spawn frpc, wait for proxy success.</p>
               </div>
             </div>
             <div class="step">
               <div class="step-n">3</div>
               <div>
-                <h4 data-i18n="s3t">Operate</h4>
-                <p data-i18n="s3d">Status, logs, config, stop/restart. Everything in the TUI.</p>
+                <h4 data-i18n="s3t">Ready</h4>
+                <p data-i18n="s3d">SSH reachable via FRP. Stop anytime, cleanup is automatic.</p>
               </div>
             </div>
           </div>
           <div class="code-card">
             <div class="code-card-head"><span>terminal</span><span data-i18n="qk">quickstart</span></div>
-            <pre><span class="cm"># install</span>
-<span class="g">bun</span> add <span class="cy">-g</span> telebear
+            <pre><span class="cm"># install frpc</span>
+<span class="g">./setup-frp.sh</span>
 
 <span class="cm"># run</span>
-<span class="g">telebear</span>
+<span class="g">bun</span> run start
 
-<span class="cm"># config</span>
-<span class="cm"># ~/.config/telebear/telebear.toml</span></pre>
+<span class="cm"># or build &amp; run</span>
+<span class="g">bun</span> run build
+<span class="g">./dist/telebear</span>
+
+<span class="cm"># config: ~/.config/telebear/telebear.toml</span></pre>
           </div>
         </div>
       </section>
 
       <!-- Use cases -->
       <section class="section">
-        <div class="section-head">
+        <div class="section-head center">
           <div class="section-label" data-i18n="ulab">Use cases</div>
-          <div class="section-title" data-i18n="utitle">Temporary access,<br>when you need it</div>
+          <div class="section-title" data-i18n="utitle">Instant access,<br>when you need it</div>
         </div>
         <div class="use-grid">
           <div class="use-card">
@@ -538,7 +538,7 @@
           </div>
           <div class="use-card">
             <h4 data-i18n="u2t">Server Access</h4>
-            <p data-i18n="u2d">Expose SSH through FRP when direct networking isn't available.</p>
+            <p data-i18n="u2d">No public IP? Tunnel SSH out through FRP.</p>
           </div>
           <div class="use-card">
             <h4 data-i18n="u3t">Pair Programming</h4>
@@ -546,14 +546,14 @@
           </div>
           <div class="use-card">
             <h4 data-i18n="u4t">Maintenance</h4>
-            <p data-i18n="u4d">Bring up SSH for a maintenance window, with automatic cleanup.</p>
+            <p data-i18n="u4d">Spin up SSH for a maintenance window, with automatic cleanup.</p>
           </div>
         </div>
       </section>
 
       <!-- Keybindings -->
       <section id="keys" class="section">
-        <div class="section-head">
+        <div class="section-head center">
           <div class="section-label" data-i18n="klab">Keybindings</div>
           <div class="section-title" data-i18n="ktitle">Keyboard-driven</div>
         </div>
@@ -562,16 +562,16 @@
           <div class="keys-row"><span class="kbd">s</span><span data-i18n="k1">Start / Stop</span></div>
           <div class="keys-row"><span class="kbd">r</span><span data-i18n="k2">Restart</span></div>
           <div class="keys-row"><span class="kbd">1</span><span data-i18n="k3">Status</span></div>
-          <div class="keys-row"><span class="kbd">2</span><span data-i18n="k4">Config</span></div>
-          <div class="keys-row"><span class="kbd">3</span><span data-i18n="k5">Log</span></div>
+          <div class="keys-row"><span class="kbd">2 / c</span><span data-i18n="k4">Config</span></div>
+          <div class="keys-row"><span class="kbd">3 / l</span><span data-i18n="k5">Log</span></div>
           <div class="keys-row"><span class="kbd">Esc</span><span data-i18n="k8">Back to status</span></div>
           <div class="keys-row"><span class="kbd">q</span><span data-i18n="k9">Quit</span></div>
           <div class="keys-group" data-i18n="kl">Log view</div>
-          <div class="keys-row"><span class="kbd">j/k</span><span data-i18n="k10">Scroll</span></div>
-          <div class="keys-row"><span class="kbd">g/G</span><span data-i18n="k11">Top / Bottom</span></div>
+          <div class="keys-row"><span class="kbd">j / k</span><span data-i18n="k10">Scroll</span></div>
+          <div class="keys-row"><span class="kbd">g / G</span><span data-i18n="k11">Top / Bottom</span></div>
           <div class="keys-row"><span class="kbd">x</span><span data-i18n="k12">Clear</span></div>
           <div class="keys-group" data-i18n="kc">Config view</div>
-          <div class="keys-row"><span class="kbd">&uarr;&darr;</span><span data-i18n="k13">Navigate</span></div>
+          <div class="keys-row"><span class="kbd">&uarr; &darr;</span><span data-i18n="k13">Navigate</span></div>
           <div class="keys-row"><span class="kbd">Enter</span><span data-i18n="k14">Edit</span></div>
         </div>
       </section>
@@ -580,14 +580,14 @@
       <section id="install" class="cta">
         <div class="section-head center">
           <div class="section-label" data-i18n="ilab">Install</div>
-          <div class="section-title" data-i18n="ititle">One command</div>
+          <div class="section-title" data-i18n="ititle">Get started</div>
         </div>
         <div class="install-bar">
           <span class="pr">$</span>
-          <span class="cm">bun add -g telebear</span>
+          <span class="cm">git clone &amp;&amp; bun install &amp;&amp; bun run start</span>
           <button id="copyBtn" data-i18n="copy">copy</button>
         </div>
-        <p class="cta-note"><strong data-i18n="dep1">frpc</strong> <span data-i18n="dep2">required as external dependency</span></p>
+        <p class="cta-note"><strong data-i18n="dep1">frpc</strong> <span data-i18n="dep2">required — install via</span> <code style="font-family:var(--mono);font-size:0.85em">./setup-frp.sh</code></p>
       </section>
 
     </div>
@@ -595,7 +595,7 @@
     <footer>
       <div class="wrap">
         <div class="footer-inner">
-          <span data-i18n="ft">Telebear &mdash; temporary SSH + FRP tunnel</span>
+          <span data-i18n="ft">Telebear — instant SSH + FRP tunnel</span>
           <div class="footer-links">
             <a href="#features" data-i18n="ff">Features</a>
             <a href="#how" data-i18n="fh">How it works</a>
@@ -609,10 +609,10 @@
       const M = {
         en: {
           navFeat:"Features",navHow:"How it works",navKeys:"Keybindings",navGH:"GitHub",
-          h1:'Telebear: Instant <em>SSH Tunnel</em>',
-          hsub:"Spin up a temporary SSH server and expose it through FRP. All from a terminal UI.",
+          h1:'Instant SSH<br>tunneled through <em>FRP</em>',
+          hsub:"Spin up an SSH server and expose it through FRP. Terminal UI, single binary, zero config drift.",
           hcta:"Install",hcta2:"How it works",
-          t1:"Config loaded",t2:"Starting SSH on :20222",t3:"SSH server ready",
+          t1:"Config loaded",t2:"Starting SSH on :20222",t3:"SSH ready",
           t4:"Connecting frpc to frps.example.com:7000",t5:"Tunnel established → :6000",
           t6:"ssh -p 6000 user@frps.example.com",
           ts1:"running :20222",ts2:"tunnel active",
@@ -620,64 +620,64 @@
           f1t:"SSH Server",f1d:"Built-in SSH2 with public-key auth, PTY, shell and exec.",
           f2t:"FRP Tunnel",f2d:"Auto-generates frpc config, connects to your server, binds a remote port.",
           f3t:"Terminal UI",f3d:"Status, config, logs. Switch views and control services with single keys.",
-          f4t:"Auto Rollback",f4d:"Tunnel fails? SSH stops automatically. No dangling processes.",
+          f4t:"Auto Rollback",f4d:"Tunnel fails? SSH stops automatically. No orphan processes left behind.",
           f5t:"TOML Config",f5d:"Six fields. Edit from the TUI or any text editor.",
           f6t:"Single Binary",f6d:"Compile to a standalone executable. Ship telebear + frpc.",
           hlab:"How it works",htitle:"Three steps to a<br>public SSH endpoint",
-          s1t:"Prepare SSH",s1d:"Validate config, generate host key, write authorized_keys, start SSH2 on localhost.",
-          s2t:"Establish Tunnel",s2d:"Write temp frpc.toml, spawn frpc, wait for proxy success.",
-          s3t:"Operate",s3d:"Status, logs, config, stop/restart. Everything in the TUI.",
+          s1t:"Prepare SSH",s1d:"Validate config, generate host key, write authorized_keys, start SSH2.",
+          s2t:"Establish Tunnel",s2d:"Generate temp frpc.toml, spawn frpc, wait for proxy success.",
+          s3t:"Ready",s3d:"SSH reachable via FRP. Stop anytime, cleanup is automatic.",
           qk:"quickstart",
-          ulab:"Use cases",utitle:"Temporary access,<br>when you need it",
+          ulab:"Use cases",utitle:"Instant access,<br>when you need it",
           u1t:"Remote Debugging",u1d:"SSH into a machine behind NAT, then tear it down.",
-          u2t:"Server Access",u2d:"Expose SSH through FRP when direct networking isn't available.",
+          u2t:"Server Access",u2d:"No public IP? Tunnel SSH out through FRP.",
           u3t:"Pair Programming",u3d:"Let a colleague SSH into your machine temporarily.",
-          u4t:"Maintenance",u4d:"Bring up SSH for a maintenance window, with automatic cleanup.",
+          u4t:"Maintenance",u4d:"Spin up SSH for a maintenance window, with automatic cleanup.",
           klab:"Keybindings",ktitle:"Keyboard-driven",
           kg:"Global",kl:"Log view",kc:"Config view",
           k1:"Start / Stop",k2:"Restart",k3:"Status",k4:"Config",k5:"Log",
           k8:"Back to status",k9:"Quit",k10:"Scroll",k11:"Top / Bottom",k12:"Clear",
           k13:"Navigate",k14:"Edit",
-          ilab:"Install",ititle:"One command",copy:"copy",
-          dep1:"frpc",dep2:"required as external dependency",
-          ft:"Telebear \u2014 temporary SSH + FRP tunnel",ff:"Features",fh:"How it works",
-          langLabel:"\u4e2d\u6587",themeLight:"Light",themeDark:"Dark"
+          ilab:"Install",ititle:"Get started",copy:"copy",
+          dep1:"frpc",dep2:"required — install via",
+          ft:"Telebear — instant SSH + FRP tunnel",ff:"Features",fh:"How it works",
+          langLabel:"中文",themeLight:"Light",themeDark:"Dark"
         },
         zh: {
-          navFeat:"\u529f\u80fd",navHow:"\u539f\u7406",navKeys:"\u5feb\u6377\u952e",navGH:"GitHub",
-          h1:'\u5f00\u95e8\u718a<br><em>\u4e34\u65f6 SSH \u96a7\u9053</em>',
-          hsub:"\u901a\u8fc7 FRP \u96a7\u9053\u53d1\u5e03\u4e34\u65f6 SSH \u3002\u7ec8\u7aef UI \u4e00\u952e\u542f\u52a8\uff0c\u7528\u5b8c\u5373\u8d70\u3002",
-          hcta:"\u5b89\u88c5",hcta2:"\u5de5\u4f5c\u539f\u7406",
-          t1:"\u914d\u7f6e\u5df2\u52a0\u8f7d",t2:"\u6b63\u5728\u542f\u52a8 SSH :20222",t3:"SSH \u5df2\u5c31\u7eea",
-          t4:"\u8fde\u63a5 frpc \u5230 frps.example.com:7000",t5:"\u96a7\u9053\u5df2\u5efa\u7acb → :6000",
+          navFeat:"功能",navHow:"原理",navKeys:"快捷键",navGH:"GitHub",
+          h1:'快速 SSH<br>通过 <em>FRP</em> 隧道暴露',
+          hsub:"启动 SSH 服务并通过 FRP 隧道发布。终端 UI，单二进制，零配置漂移。",
+          hcta:"安装",hcta2:"工作原理",
+          t1:"配置已加载",t2:"正在启动 SSH :20222",t3:"SSH 就绪",
+          t4:"连接 frpc 到 frps.example.com:7000",t5:"隧道已建立 → :6000",
           t6:"ssh -p 6000 user@frps.example.com",
-          ts1:"\u8fd0\u884c\u4e2d :20222",ts2:"\u96a7\u9053\u5df2\u6fc0\u6d3b",
-          flab:"\u529f\u80fd",ftitle:"\u4e34\u65f6\u96a7\u9053\uff0c<br>\u5feb\u901f\u5f00\u95e8",
-          f1t:"SSH \u670d\u52a1",f1d:"\u5185\u7f6e SSH2\uff0c\u516c\u94a5\u8ba4\u8bc1\u3001PTY\u3001shell\u3001exec\u3002",
-          f2t:"FRP \u96a7\u9053",f2d:"\u81ea\u52a8\u751f\u6210 frpc \u914d\u7f6e\uff0c\u8fde\u63a5\u670d\u52a1\u5668\uff0c\u7ed1\u5b9a\u8fdc\u7a0b\u7aef\u53e3\u3002",
-          f3t:"\u7ec8\u7aef UI",f3d:"\u72b6\u6001\u3001\u914d\u7f6e\u3001\u65e5\u5fd7\u3002\u5355\u952e\u5207\u6362\u89c6\u56fe\u5e76\u63a7\u5236\u670d\u52a1\u3002",
-          f4t:"\u81ea\u52a8\u56de\u6eda",f4d:"\u96a7\u9053\u5931\u8d25\u65f6 SSH \u81ea\u52a8\u505c\u6b62\u3002\u4e0d\u7559\u5b64\u7acb\u8fdb\u7a0b\u3002",
-          f5t:"TOML \u914d\u7f6e",f5d:"\u516d\u4e2a\u5b57\u6bb5\u3002TUI \u6216\u4efb\u4f55\u7f16\u8f91\u5668\u4fee\u6539\u3002",
-          f6t:"\u5355\u4e8c\u8fdb\u5236",f6d:"\u7f16\u8bd1\u4e3a\u72ec\u7acb\u53ef\u6267\u884c\u6587\u4ef6\u3002\u90e8\u7f72 telebear + frpc\u3002",
-          hlab:"\u539f\u7406",htitle:"\u4e09\u6b65\u642d\u5efa<br>\u4e34\u65f6 SSH \u96a7\u9053",
-          s1t:"\u51c6\u5907 SSH",s1d:"\u6821\u9a8c\u914d\u7f6e\uff0c\u751f\u6210 host key\uff0c\u5199\u5165 authorized_keys\uff0c\u542f\u52a8 SSH2\u3002",
-          s2t:"\u5efa\u7acb\u96a7\u9053",s2d:"\u751f\u6210\u4e34\u65f6 frpc.toml\uff0c\u542f\u52a8 frpc\uff0c\u7b49\u5f85 proxy success\u3002",
-          s3t:"\u5f00\u95e8\u5927\u5409",s3d:"\u5ba2\u6237\u7aef SSH \u8fde\u63a5\u5df2\u5c31\u7eea\u3002\u7528\u5b8c\u4e00\u952e\u505c\u6b62\uff0c\u4e0d\u7559\u75d5\u8ff9\u3002",
-          qk:"\u5feb\u901f\u5f00\u59cb",
-          ulab:"\u573a\u666f",utitle:"\u4e34\u65f6\u9700\u8981\uff0c<br>\u4e34\u65f6\u5f00\u95e8",
-          u1t:"\u8fdc\u7a0b\u8c03\u8bd5",u1d:"\u7a81\u7834 NAT\uff0c\u4e34\u65f6\u8fdb\u5165\u5185\u7f51\u673a\u5668\u8c03\u8bd5\uff0c\u5b8c\u4e8b\u4e00\u952e\u6e05\u573a\u3002",
-          u2t:"\u670d\u52a1\u5668\u8bbf\u95ee",u2d:"\u6ca1\u6709\u516c\u7f51 IP\uff1f\u901a\u8fc7 FRP \u96a7\u9053\u8ba9 SSH \u8d70\u51fa\u6765\u3002",
-          u3t:"\u7ed3\u5bf9\u7f16\u7a0b",u3d:"\u8ba9\u540c\u4e8b\u4e34\u65f6 SSH \u5230\u4f60\u7684\u673a\u5668\u3002",
-          u4t:"\u8fd0\u7ef4",u4d:"\u7ef4\u62a4\u7a97\u53e3\u62c9\u8d77 SSH\uff0c\u5e26\u81ea\u52a8\u6e05\u7406\u3002",
-          klab:"\u5feb\u6377\u952e",ktitle:"\u952e\u76d8\u9a71\u52a8",
-          kg:"\u5168\u5c40",kl:"\u65e5\u5fd7",kc:"\u914d\u7f6e",
-          k1:"\u542f\u52a8 / \u505c\u6b62",k2:"\u91cd\u542f",k3:"\u72b6\u6001",k4:"\u914d\u7f6e",k5:"\u65e5\u5fd7",
-          k8:"\u8fd4\u56de\u72b6\u6001",k9:"\u9000\u51fa",k10:"\u6eda\u52a8",k11:"\u9876\u90e8 / \u5e95\u90e8",k12:"\u6e05\u9664",
-          k13:"\u5bfc\u822a",k14:"\u7f16\u8f91",
-          ilab:"\u5b89\u88c5",ititle:"\u4e00\u6761\u547d\u4ee4",copy:"\u590d\u5236",
-          dep1:"frpc",dep2:"\u4f5c\u4e3a\u5916\u90e8\u4f9d\u8d56\u5fc5\u9700",
-          ft:"\u5f00\u95e8\u718a \u2014 \u4e34\u65f6 SSH \u96a7\u9053 | Telebear",ff:"\u529f\u80fd",fh:"\u539f\u7406",
-          langLabel:"English",themeLight:"\u6d45\u8272",themeDark:"\u6df1\u8272"
+          ts1:"运行中 :20222",ts2:"隧道已激活",
+          flab:"功能",ftitle:"一个终端会话，<br>搞定一切",
+          f1t:"SSH 服务",f1d:"内置 SSH2，公钥认证、PTY、shell、exec。",
+          f2t:"FRP 隧道",f2d:"自动生成 frpc 配置，连接服务器，绑定远程端口。",
+          f3t:"终端 UI",f3d:"状态、配置、日志。单键切换视图并控制服务。",
+          f4t:"自动回滚",f4d:"隧道失败时 SSH 自动停止。不留孤立进程。",
+          f5t:"TOML 配置",f5d:"六个字段。TUI 或任何编辑器修改。",
+          f6t:"单二进制",f6d:"编译为独立可执行文件。部署 telebear + frpc。",
+          hlab:"原理",htitle:"三步搭建<br>快速 SSH 隧道",
+          s1t:"准备 SSH",s1d:"校验配置，生成 host key，写入 authorized_keys，启动 SSH2。",
+          s2t:"建立隧道",s2d:"生成临时 frpc.toml，启动 frpc，等待 proxy success。",
+          s3t:"就绪",s3d:"SSH 可通过 FRP 访问。随时停止，自动清理。",
+          qk:"快速开始",
+          ulab:"场景",utitle:"快速需要，<br>快速开门",
+          u1t:"远程调试",u1d:"突破 NAT，快速进入内网机器调试，完事一键清场。",
+          u2t:"服务器访问",u2d:"没有公网 IP？通过 FRP 隧道让 SSH 走出来。",
+          u3t:"结对编程",u3d:"让同事快速 SSH 到你的机器。",
+          u4t:"运维",u4d:"维护窗口拉起 SSH，带自动清理。",
+          klab:"快捷键",ktitle:"键盘驱动",
+          kg:"全局",kl:"日志",kc:"配置",
+          k1:"启动 / 停止",k2:"重启",k3:"状态",k4:"配置",k5:"日志",
+          k8:"返回状态",k9:"退出",k10:"滚动",k11:"顶部 / 底部",k12:"清除",
+          k13:"导航",k14:"编辑",
+          ilab:"安装",ititle:"开始使用",copy:"复制",
+          dep1:"frpc",dep2:"必需 — 通过以下命令安装",
+          ft:"Telebear — 快速 SSH + FRP 隧道",ff:"功能",fh:"原理",
+          langLabel:"English",themeLight:"浅色",themeDark:"深色"
         }
       };
 
@@ -721,8 +721,8 @@
       setLang(sl || ((navigator.language||"").startsWith("zh")?"zh":"en"));
 
       document.getElementById("copyBtn").onclick = function() {
-        navigator.clipboard.writeText("bun add -g telebear").then(() => {
-          this.textContent = "\u2713";
+        navigator.clipboard.writeText("git clone https://github.com/nano-props/telebear && cd telebear && bun install && bun run start").then(() => {
+          this.textContent = "✓";
           setTimeout(() => { this.textContent = M[lang()].copy; }, 1500);
         });
       };

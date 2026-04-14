@@ -46,19 +46,12 @@ Dependencies:
 Keys:
   s              Start/Stop services
   r              Restart services
-  1 / 2 / 3      Switch to Status / Config / Log view
-  c / l          Config / Log view
-  Esc            Back to status
+  Up/Down        Navigate config fields
+  Enter          Edit selected field
+  j/k            Scroll log
+  g / G          Jump to top / bottom of log
+  x              Clear log
   q              Quit
-
-Log view:
-  j/k, Up/Down   Scroll logs
-  g / G          Jump to top / bottom
-  x              Clear logs
-
-Config view:
-  Up/Down        Navigate fields
-  Enter          Edit field
 
 Config: ~/.config/telebear/telebear.toml`)
   process.exit(0)

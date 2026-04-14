@@ -2,12 +2,13 @@
 
 Temporary SSH server with FRP tunnel — managed from a terminal UI.
 
-Spins up a [Dropbear](https://matt.ucc.asn.au/dropbear/dropbear.html) SSH server and tunnels it through [FRP](https://github.com/fatedier/frp) so it's reachable from the internet.
+Spins up an SSH server (via [ssh2](https://github.com/mscdex/ssh2)) and tunnels it through [FRP](https://github.com/fatedier/frp) so it's reachable from the internet.
 
 ## Dependencies
 
-- `dropbear` — lightweight SSH server (also provides `dropbearkey`)
 - `frpc` — FRP client ([github.com/fatedier/frp](https://github.com/fatedier/frp))
+
+Install with the included script: `./setup-frp.sh` (run `./setup-frp.sh -h` for options).
 
 ## Usage
 

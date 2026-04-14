@@ -111,23 +111,25 @@ export function InputDialog({ title, placeholder, defaultValue = '', multiline =
     )
   }
 
-  // Single-line mode (original behavior)
-  const displayValue = value || placeholder
-  const isPlaceholder = !value
-
+  // Single-line mode
   return (
     <Box flexDirection="column" borderStyle="round" borderColor="cyan" paddingX={1}>
       <Text bold color="cyan">
         {title}
       </Text>
       <Box marginTop={1}>
-        <Text dimColor={isPlaceholder}>
-          {displayValue.slice(0, cursor)}
-        </Text>
-        <Text inverse>{displayValue[cursor] ?? ' '}</Text>
-        <Text dimColor={isPlaceholder}>
-          {displayValue.slice(cursor + 1)}
-        </Text>
+        {value ? (
+          <>
+            <Text>{value.slice(0, cursor)}</Text>
+            <Text inverse>{value[cursor] ?? ' '}</Text>
+            <Text>{value.slice(cursor + 1)}</Text>
+          </>
+        ) : (
+          <>
+            <Text inverse> </Text>
+            <Text dimColor>{placeholder}</Text>
+          </>
+        )}
       </Box>
       <Box marginTop={1} gap={2}>
         <Text dimColor>

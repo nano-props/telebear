@@ -91,6 +91,6 @@ export function isConfigValid(config: TelebearConfig): { valid: boolean; errors:
   if (!config.frp.server_addr) errors.push('FRP server address is empty')
   if (config.frp.server_port <= 0) errors.push('FRP server port is invalid')
   if (!config.frp.token) errors.push('FRP token is empty')
-  if (config.frp.remote_port <= 0) errors.push('FRP remote port is invalid')
+  if (config.frp.remote_port < 0 || config.frp.remote_port > 65535) errors.push('FRP remote port is invalid')
   return { valid: errors.length === 0, errors }
 }

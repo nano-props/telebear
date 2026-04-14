@@ -5,16 +5,33 @@ import { tmpdir } from 'node:os'
 import { stringify } from 'smol-toml'
 import type { TelebearConfig } from '@/config/config.ts'
 
-const textDecoder = new TextDecoder()
+/** Line-buffered stream decoder — handles multi-byte chars split across chunks. */
+class LineBuffer {
+  private decoder = new TextDecoder()
+  private partial = ''
 
-function decodeChunk(chunk: Uint8Array): string {
-  return textDecoder.decode(chunk)
+  feed(chunk: Uint8Array): string[] {
+    this.partial += this.decoder.decode(chunk, { stream: true })
+    const parts = this.partial.split('\n')
+    // Last element is the incomplete line (or '' if chunk ended with \n)
+    this.partial = parts.pop()!
+    return parts.filter(Boolean)
+  }
+
+  /** Flush any remaining partial line. */
+  flush(): string | null {
+    const rest = this.partial + this.decoder.decode()
+    this.partial = ''
+    return rest || null
+  }
 }
 
 export interface FrpcState {
   process: ChildProcess | null
   pid: number | null
   tempDir: string | null
+  /** Actual remote port assigned by frps (may differ from config when remote_port=0). */
+  actualRemotePort: number | null
 }
 
 function generateFrpcConfig(config: TelebearConfig, localPort: number): string {
@@ -52,42 +69,62 @@ export async function startFrpc(
   return new Promise((resolve) => {
     const args = ['-c', configPath]
     let resolved = false
+    const stdoutBuf = new LineBuffer()
+    const stderrBuf = new LineBuffer()
 
     onLog(`Starting frpc -> ${config.frp.server_addr}:${config.frp.server_port}`)
     const proc = spawn('frpc', args, {
       stdio: ['ignore', 'pipe', 'pipe'],
     })
 
-    const handleOutput = (chunk: Uint8Array) => {
-      const lines = decodeChunk(chunk).split('\n').filter(Boolean)
-      lines.forEach((l) => {
+    // Track the actual remote port (may be assigned by frps when config remote_port=0)
+    let actualRemotePort: number | null = null
+
+    const handleLines = (lines: string[]) => {
+      for (const l of lines) {
         onLog(`[frpc] ${l}`)
+
+        // Try to extract actual remote port from frpc log (e.g. "remote_port = 12345")
+        const portMatch = l.match(/remote[_\s]port\D+(\d+)/)
+        if (portMatch) {
+          actualRemotePort = parseInt(portMatch[1]!, 10)
+        }
+
         // frpc logs "start proxy success" when tunnel is established
-        if (!resolved && (l.includes('start proxy success') || l.includes('login to server success'))) {
+        if (!resolved && l.includes('start proxy success')) {
           resolved = true
+          const port = actualRemotePort ?? config.frp.remote_port
           resolve({
             ok: true,
-            message: `FRP tunnel established -> ${config.frp.server_addr}:${config.frp.remote_port}`,
-            state: { process: proc, pid: proc.pid ?? null, tempDir },
+            message: `FRP tunnel established -> ${config.frp.server_addr}:${port}`,
+            state: { process: proc, pid: proc.pid ?? null, tempDir, actualRemotePort: port },
           })
         }
-      })
+      }
     }
 
-    proc.stdout?.on('data', handleOutput)
-    proc.stderr?.on('data', handleOutput)
+    proc.stdout?.on('data', (chunk: Uint8Array) => handleLines(stdoutBuf.feed(chunk)))
+    proc.stderr?.on('data', (chunk: Uint8Array) => handleLines(stderrBuf.feed(chunk)))
 
     proc.on('error', (err) => {
       if (!resolved) {
         resolved = true
         cleanupTempDir(tempDir)
-        resolve({ ok: false, message: `frpc error: ${err.message}` })
+        const message = (err as NodeJS.ErrnoException).code === 'ENOENT'
+          ? 'frpc not found in PATH. Install it with: ./setup-frp.sh'
+          : `frpc error: ${err.message}`
+        resolve({ ok: false, message })
       } else {
         onLog(`[frpc] error: ${err.message}`)
       }
     })
 
     proc.on('close', (code) => {
+      // Flush any remaining partial lines
+      for (const buf of [stdoutBuf, stderrBuf]) {
+        const rest = buf.flush()
+        if (rest) onLog(`[frpc] ${rest}`)
+      }
       if (!resolved) {
         resolved = true
         cleanupTempDir(tempDir)

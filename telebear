@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-"$SCRIPT_DIR/node_modules/.bin/tsx" --tsconfig "$SCRIPT_DIR/tsconfig.json" "$SCRIPT_DIR/src/main.ts" "$@"
+exec bun "$SCRIPT_DIR/src/main.ts" "$@"

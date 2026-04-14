@@ -1,18 +1,15 @@
-import { rmSync } from 'node:fs'
 import { create } from 'zustand'
 import { loadConfig, saveConfig, isConfigValid } from '@/config/config.ts'
 import type { TelebearConfig } from '@/config/config.ts'
-import { startSshd, stopSshd, waitForSshdExit } from '@/services/sshd.ts'
-import type { SshdState } from '@/services/sshd.ts'
-import { startFrpc, stopFrpc, waitForFrpcExit } from '@/services/frpc.ts'
-import type { FrpcState } from '@/services/frpc.ts'
+import { ServiceManager } from '@/services/ServiceManager.ts'
+import type { ServiceStatus, ServiceSnapshot } from '@/services/ServiceManager.ts'
+import type { ClientInfo } from '@/services/sshd.ts'
 
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
 
-export type ServiceStatus = 'stopped' | 'starting' | 'running' | 'error'
-export type View = 'status' | 'config' | 'log'
+export type { ServiceStatus }
 
 interface Notification {
   type: 'success' | 'error' | 'info'
@@ -36,22 +33,20 @@ export type ConfigField =
   | 'frp.remote_port'
 
 export interface AppState {
-  // View
-  currentView: View
-
   // Config
   config: TelebearConfig | null
   configErrors: string[]
 
-  // Service state
+  // Service state (synced from ServiceManager)
   sshStatus: ServiceStatus
   frpcStatus: ServiceStatus
   sshPort: number | null
   tunnelAddress: string | null
+  activeClients: ClientInfo[]
+  lastError: string | null
 
   // Logs
   logs: string[]
-  lastError: string | null
 
   // UI state
   notification: Notification | null
@@ -61,7 +56,6 @@ export interface AppState {
 
   // Actions
   init: () => Promise<void>
-  setCurrentView: (view: View) => void
 
   // Service actions
   startServices: () => Promise<void>
@@ -85,11 +79,23 @@ export interface AppState {
 }
 
 // ---------------------------------------------------------------------------
-// Internal state (not in zustand to avoid storing process refs)
+// Constants
 // ---------------------------------------------------------------------------
 
-let _sshdState: SshdState | null = null
-let _frpcState: FrpcState | null = null
+export const CONFIG_FIELDS: { field: ConfigField; label: string; placeholder: string }[] = [
+  { field: 'ssh.authorized_keys', label: 'SSH Public Keys', placeholder: 'ssh-ed25519 AAAA...' },
+  { field: 'ssh.port', label: 'SSH Local Port', placeholder: '20222' },
+  { field: 'frp.server_addr', label: 'FRP Server Address', placeholder: 'frps.example.com' },
+  { field: 'frp.server_port', label: 'FRP Server Port', placeholder: '7000' },
+  { field: 'frp.token', label: 'FRP Token', placeholder: 'your-token' },
+  { field: 'frp.remote_port', label: 'FRP Remote Port', placeholder: '0 = same as local port' },
+]
+
+const MAX_LOGS = 500
+
+// ---------------------------------------------------------------------------
+// Notification timer (module-level, not in zustand)
+// ---------------------------------------------------------------------------
 
 let notificationTimer: ReturnType<typeof setTimeout> | null = null
 
@@ -100,17 +106,23 @@ function clearNotificationTimer(): void {
   }
 }
 
-// Config fields metadata
-export const CONFIG_FIELDS: { field: ConfigField; label: string; placeholder: string }[] = [
-  { field: 'ssh.authorized_keys', label: 'SSH Public Keys', placeholder: 'ssh-ed25519 AAAA...' },
-  { field: 'ssh.port', label: 'SSH Local Port', placeholder: '20222' },
-  { field: 'frp.server_addr', label: 'FRP Server Address', placeholder: 'frps.example.com' },
-  { field: 'frp.server_port', label: 'FRP Server Port', placeholder: '7000' },
-  { field: 'frp.token', label: 'FRP Token', placeholder: 'your-token' },
-  { field: 'frp.remote_port', label: 'FRP Remote Port', placeholder: '6000' },
-]
+// ---------------------------------------------------------------------------
+// Service manager (singleton, owns all process state)
+// ---------------------------------------------------------------------------
 
-const MAX_LOGS = 500
+let _manager: ServiceManager | null = null
+
+function getManager(addLog: (line: string) => void): ServiceManager {
+  if (!_manager) {
+    _manager = new ServiceManager(addLog)
+  }
+  return _manager
+}
+
+/** Called from main.ts on process exit. */
+export function cleanupServices(): void {
+  _manager?.cleanup()
+}
 
 // ---------------------------------------------------------------------------
 // Store
@@ -124,35 +136,26 @@ export const useAppStore = create<AppState>()((set, get) => {
     }))
   }
 
-  /** Stop both services and wait for processes to actually exit. */
-  async function stopAndWait(): Promise<void> {
-    const { sshStatus, frpcStatus } = get()
-    const waits: Promise<void>[] = []
+  const manager = getManager(addLog)
 
-    if (_frpcState && (frpcStatus === 'running' || frpcStatus === 'starting')) {
-      const state = _frpcState
-      waits.push(waitForFrpcExit(state))
-      stopFrpc(state)
-      _frpcState = null
-      set({ frpcStatus: 'stopped', tunnelAddress: null })
-      addLog('Stopping frpc...')
-    }
-
-    if (_sshdState && (sshStatus === 'running' || sshStatus === 'starting')) {
-      const state = _sshdState
-      waits.push(waitForSshdExit(state))
-      stopSshd(state)
-      _sshdState = null
-      set({ sshStatus: 'stopped', sshPort: null })
-      addLog('Stopping SSH server...')
-    }
-
-    await Promise.all(waits)
+  // Surface unexpected service errors as notifications
+  manager.onError = (message: string) => {
+    get().showNotification('error', message)
   }
 
-  return {
-    currentView: 'status',
+  // Subscribe: whenever the manager's service state changes, sync to zustand
+  manager.subscribe((snap: ServiceSnapshot) => {
+    set({
+      sshStatus: snap.sshStatus,
+      frpcStatus: snap.frpcStatus,
+      sshPort: snap.sshPort,
+      tunnelAddress: snap.tunnelAddress,
+      activeClients: snap.activeClients,
+      lastError: snap.lastError,
+    })
+  })
 
+  return {
     config: null,
     configErrors: [],
 
@@ -160,6 +163,7 @@ export const useAppStore = create<AppState>()((set, get) => {
     frpcStatus: 'stopped',
     sshPort: null,
     tunnelAddress: null,
+    activeClients: [],
 
     logs: [],
     lastError: null,
@@ -186,14 +190,9 @@ export const useAppStore = create<AppState>()((set, get) => {
       }
     },
 
-    setCurrentView(view) {
-      set({ currentView: view })
-    },
-
     async startServices() {
-      const { config, sshStatus } = get()
+      const { config } = get()
       if (!config) return
-      if (sshStatus === 'running' || sshStatus === 'starting') return
 
       const { valid, errors } = isConfigValid(config)
       if (!valid) {
@@ -201,88 +200,29 @@ export const useAppStore = create<AppState>()((set, get) => {
         return
       }
 
-      // Start SSH server
-      set({ sshStatus: 'starting', lastError: null })
-      addLog('Starting SSH server...')
-
-      const sshResult = await startSshd(config, addLog)
-      if (!sshResult.ok || !sshResult.state) {
-        set({ sshStatus: 'error', lastError: `SSH: ${sshResult.message}` })
-        addLog(`SSH server failed: ${sshResult.message}`)
-        get().showNotification('error', sshResult.message)
-        return
+      const result = await manager.start(config)
+      if (result.ok) {
+        get().showNotification('success', `Tunnel: ${result.message}`)
+      } else {
+        get().showNotification('error', result.message!)
       }
-
-      const sshdState = sshResult.state
-      _sshdState = sshdState
-      const actualPort = sshdState.port
-      set({ sshStatus: 'running', sshPort: actualPort })
-      addLog(sshResult.message)
-
-      // Watch for SSH server close — only act if this state ref is still current
-      sshdState.server.once('close', () => {
-        if (_sshdState !== sshdState) return
-        _sshdState = null
-        set({ sshStatus: 'stopped', sshPort: null })
-        addLog('SSH server stopped')
-        if (_frpcState) {
-          stopFrpc(_frpcState)
-          _frpcState = null
-          set({ frpcStatus: 'stopped', tunnelAddress: null })
-          addLog('frpc stopped (SSH server exited)')
-        }
-      })
-
-      // Start frpc
-      set({ frpcStatus: 'starting' })
-      addLog('Starting frpc...')
-
-      const frpcResult = await startFrpc(config, actualPort, addLog)
-      if (!frpcResult.ok || !frpcResult.state) {
-        set({ frpcStatus: 'error', lastError: `FRP: ${frpcResult.message}` })
-        addLog(`frpc failed: ${frpcResult.message}`)
-        get().showNotification('error', frpcResult.message)
-
-        // Rollback: stop SSH server since tunnel failed
-        if (_sshdState === sshdState) {
-          _sshdState = null
-          addLog('Rolling back: stopping SSH server (frpc failed)')
-          stopSshd(sshdState)
-          await waitForSshdExit(sshdState)
-          set({ sshStatus: 'stopped', sshPort: null })
-        }
-        return
-      }
-
-      const frpcState = frpcResult.state
-      _frpcState = frpcState
-      set({
-        frpcStatus: 'running',
-        tunnelAddress: `${config.frp.server_addr}:${config.frp.remote_port}`,
-      })
-      addLog(frpcResult.message)
-      get().showNotification('success', `Tunnel: ssh -p ${config.frp.remote_port} user@${config.frp.server_addr}`)
-
-      // Watch for frpc exit — only act if this state ref is still current
-      frpcState.process?.on('close', () => {
-        if (_frpcState !== frpcState) return
-        _frpcState = null
-        set({ frpcStatus: 'stopped', tunnelAddress: null })
-        addLog('frpc stopped')
-      })
     },
 
     async stopServices() {
-      await stopAndWait()
-      set({ lastError: null })
+      await manager.stop()
       get().showNotification('info', 'Services stopped')
     },
 
     async restartServices() {
-      addLog('Restarting services...')
-      await stopAndWait()
-      set({ lastError: null })
-      await get().startServices()
+      const { config } = get()
+      if (!config) return
+
+      const result = await manager.restart(config)
+      if (result.ok) {
+        get().showNotification('success', `Tunnel: ${result.message}`)
+      } else {
+        get().showNotification('error', result.message!)
+      }
     },
 
     async updateConfig(field, value) {
@@ -298,30 +238,46 @@ export const useAppStore = create<AppState>()((set, get) => {
             .map((s) => s.trim())
             .filter(Boolean)
           break
-        case 'ssh.port':
-          updated.ssh.port = parseInt(value, 10) || 20222
+        case 'ssh.port': {
+          const port = parseInt(value, 10)
+          if (isNaN(port) || port <= 0 || port > 65535) {
+            get().showNotification('error', 'Invalid port number')
+            return
+          }
+          updated.ssh.port = port
           break
+        }
         case 'frp.server_addr':
           updated.frp.server_addr = value.trim()
           break
-        case 'frp.server_port':
-          updated.frp.server_port = parseInt(value, 10) || 7000
+        case 'frp.server_port': {
+          const port = parseInt(value, 10)
+          if (isNaN(port) || port <= 0 || port > 65535) {
+            get().showNotification('error', 'Invalid port number')
+            return
+          }
+          updated.frp.server_port = port
           break
+        }
         case 'frp.token':
           updated.frp.token = value.trim()
           break
-        case 'frp.remote_port':
-          updated.frp.remote_port = parseInt(value, 10) || 0
+        case 'frp.remote_port': {
+          const port = parseInt(value, 10)
+          if (isNaN(port) || port < 0 || port > 65535) {
+            get().showNotification('error', 'Invalid port number (0 = same as local)')
+            return
+          }
+          updated.frp.remote_port = port
           break
+        }
       }
 
       await saveConfig(updated)
       const { errors } = isConfigValid(updated)
       set({ config: updated, configErrors: errors })
 
-      const { sshStatus, frpcStatus } = get()
-      const servicesRunning = sshStatus === 'running' || frpcStatus === 'running'
-      if (servicesRunning) {
+      if (manager.isRunning) {
         get().showNotification('info', 'Config saved. Press r to restart services')
         addLog(`Config updated: ${field} (restart needed to apply)`)
       } else {
@@ -409,25 +365,4 @@ export const useAppStore = create<AppState>()((set, get) => {
 
 export function selectIsInputBlocked(s: AppState): boolean {
   return s.inputDialog !== null || s.confirmQuit
-}
-
-// Cleanup function for process exit (synchronous, best-effort)
-export function cleanupServices(): void {
-  if (_frpcState?.process && !_frpcState.process.killed) {
-    try { _frpcState.process.kill('SIGTERM') } catch {}
-    try { _frpcState.process.kill('SIGKILL') } catch {}
-  }
-  if (_frpcState?.tempDir) {
-    try { rmSync(_frpcState.tempDir, { recursive: true, force: true }) } catch {}
-  }
-  _frpcState = null
-
-  if (_sshdState) {
-    for (const conn of _sshdState.connections) {
-      try { conn.end() } catch {}
-    }
-    _sshdState.connections.clear()
-    try { _sshdState.server.close() } catch {}
-  }
-  _sshdState = null
 }
